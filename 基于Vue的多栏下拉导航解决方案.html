@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多栏下拉导航解决方案</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: #f8f9fa;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* 导航栏样式 */
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 2rem;
+    }
+    
+    .nav-logo {
+      color: white;
+      font-size: 1.8rem;
+      font-weight: bold;
+      padding: 1.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      position: relative;
+    }
+    
+    .nav-item {
+      position: relative;
+    }
+    
+    .nav-link {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      padding: 1.5rem 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link:hover, .nav-item.active .nav-link {
+      background: rgba(255,255,255,0.15);
+      color: white;
+    }
+    
+    .nav-link i {
+      font-size: 1.2rem;
+    }
+    
+    /* 多栏下拉菜单 */
+    .mega-menu {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+      padding: 2rem;
+      display: none;
+      z-index: 1000;
+    }
+    
+    .nav-item.active .mega-menu {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+    
+    .menu-column {
+      padding: 0.5rem;
+    }
+    
+    .column-header {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2c3e50;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #f0f2f5;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .menu-list {
+      list-style: none;
+    }
+    
+    .menu-item {
+      margin-bottom: 0.8rem;
+    }
+    
+    .menu-link {
+      color: #4a5568;
+      text-decoration: none;
+      padding: 0.5rem 0.5rem 0.5rem 0;
+      display: block;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .menu-link:hover {
+      color: #2563eb;
+      background: #f0f7ff;
+      padding-left: 10px;
+    }
+    
+    .menu-link i {
+      font-size: 0.9rem;
+      color: #6b7280;
+      width: 24px;
+      text-align: center;
+    }
+    
+    .menu-divider {
+      height: 1px;
+      background: #e5e7eb;
+      margin: 1.5rem 0;
+    }
+    
+    /* 特色区域样式 */
+    .featured-section {
+      background: linear-gradient(to right, #f0f9ff, #f0f7ff);
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+    }
+    
+    .featured-header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    
+    .featured-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease;
+    }
+    
+    .featured-item:hover {
+      transform: translateY(-3px);
+    }
+    
+    /* 动画效果 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 992px) {
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+      }
+      
+      .nav-menu {
+        flex-wrap: wrap;
+      }
+      
+      .nav-link {
+        padding: 1rem;
+      }
+      
+      .mega-menu {
+        position: relative;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <!-- 导航栏 -->
+      <nav class="navbar">
+        <div class="nav-container">
+          <div class="nav-logo">
+            <i class="fas fa-rocket"></i>
+            企业系统
+          </div>
+          
+          <ul class="nav-menu">
+            <li 
+              class="nav-item" 
+              v-for="(item, index) in menuItems" 
+              :key="item.id"
+              @mouseenter="activateMenu(index)"
+              @mouseleave="deactivateMenu(index)"
+              :class="{ active: activeIndex === index }"
+            >
+              <a href="#" class="nav-link">
+                <i :class="item.icon"></i>
+                {{ item.title }}
+              </a>
+              
+              <!-- 多栏下拉菜单 -->
+              <div class="mega-menu" v-if="item.submenu">
+                <div class="menu-grid">
+                  <!-- 菜单列 -->
+                  <div class="menu-column" v-for="(column, colIndex) in item.submenu.columns" :key="colIndex">
+                    <div class="column-header">
+                      <i :class="column.icon"></i>
+                      {{ column.title }}
+                    </div>
+                    <ul class="menu-list">
+                      <li class="menu-item" v-for="(link, linkIndex) in column.links" :key="linkIndex">
+                        <a href="#" class="menu-link">
+                          <i :class="link.icon"></i>
+                          {{ link.text }}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <!-- 分割线 -->
+                  <div class="menu-divider" v-if="item.submenu.featured"></div>
+                  
+                  <!-- 特色区域 -->
+                  <div class="featured-section" v-if="item.submenu.featured">
+                    <div class="featured-header">
+                      <i class="fas fa-star"></i>
+                      {{ item.submenu.featured.title }}
+                    </div>
+                    <div class="featured-grid">
+                      <div class="featured-item" v-for="(feature, featIndex) in item.submenu.featured.items" :key="featIndex">
+                        <div class="menu-link">
+                          <i :class="feature.icon"></i>
+                          {{ feature.text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      
+      <div style="margin-top: 3rem; padding: 2rem; text-align: center;">
+        <h2>多栏下拉导航解决方案</h2>
+        <p style="margin-top: 1rem; color: #4b5563;">
+          鼠标悬停在顶部菜单查看多栏下拉效果
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+    
+    createApp({
+      setup() {
+        // 当前激活的菜单索引
+        const activeIndex = ref(null);
+        
+        // 激活菜单
+        const activateMenu = (index) => {
+          activeIndex.value = index;
+        };
+        
+        // 关闭菜单
+        const deactivateMenu = (index) => {
+          if (activeIndex.value === index) {
+            activeIndex.value = null;
+          }
+        };
+        
+        // 菜单数据
+        const menuItems = ref([
+          {
+            id: 1,
+            title: "产品",
+            icon: "fas fa-box-open",
+            submenu: {
+              columns: [
+                {
+                  title: "核心产品",
+                  icon: "fas fa-cube",
+                  links: [
+                    { text: "企业解决方案", icon: "fas fa-building" },
+                    { text: "云服务平台", icon: "fas fa-cloud" },
+                    { text: "数据分析套件", icon: "fas fa-chart-bar" },
+                    { text: "安全防护系统", icon: "fas fa-shield-alt" },
+                    { text: "移动应用套件", icon: "fas fa-mobile-alt" }
+                  ]
+                },
+                {
+                  title: "行业方案",
+                  icon: "fas fa-industry",
+                  links: [
+                    { text: "金融服务", icon: "fas fa-coins" },
+                    { text: "医疗健康", icon: "fas fa-heartbeat" },
+                    { text: "教育培训", icon: "fas fa-graduation-cap" },
+                    { text: "零售电商", icon: "fas fa-shopping-cart" },
+                    { text: "制造生产", icon: "fas fa-cogs" }
+                  ]
+                },
+                {
+                  title: "开发工具",
+                  icon: "fas fa-tools",
+                  links: [
+                    { text: "API接口", icon: "fas fa-code" },
+                    { text: "SDK下载", icon: "fas fa-download" },
+                    { text: "文档中心", icon: "fas fa-book" },
+                    { text: "开发者社区", icon: "fas fa-users" },
+                    { text: "测试沙盒", icon: "fas fa-vial" }
+                  ]
+                }
+              ],
+              featured: {
+                title: "热门产品",
+                items: [
+                  { text: "AI智能助手", icon: "fas fa-robot" },
+                  { text: "数据可视化平台", icon: "fas fa-chart-pie" },
+                  { text: "区块链解决方案", icon: "fas fa-link" },
+                  { text: "物联网平台", icon: "fas fa-network-wired" }
+                ]
+              }
+            }
+          },
+          {
+            id: 2,
+            title: "服务",
+            icon: "fas fa-concierge-bell",
+            submenu: {
+              columns: [
+                {
+                  title: "咨询服务",
+                  icon: "fas fa-headset",
+                  links: [
+                    { text: "技术咨询", icon: "fas fa-laptop-code" },
+                    { text: "架构设计", icon: "fas fa-project-diagram" },
+                    { text: "数字化转型", icon: "fas fa-digital-tachograph" },
+                    { text: "IT规划", icon: "fas fa-road" }
+                  ]
+                },
+                {
+                  title: "实施服务",
+                  icon: "fas fa-tasks",
+                  links: [
+                    { text: "系统集成", icon: "fas fa-plug" },
+                    { text: "定制开发", icon: "fas fa-code" },
+                    { text: "数据迁移", icon: "fas fa-database" },
+                    { text: "性能优化", icon: "fas fa-tachometer-alt" }
+                  ]
+                },
+                {
+                  title: "支持服务",
+                  icon: "fas fa-hands-helping",
+                  links: [
+                    { text: "技术支持", icon: "fas fa-life-ring" },
+                    { text: "培训服务", icon: "fas fa-chalkboard-teacher" },
+                    { text: "维护服务", icon: "fas fa-wrench" },
+                    { text: "云运维", icon: "fas fa-server" }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            id: 3,
+            title: "资源",
+            icon: "fas fa-book",
+            submenu: {
+              columns: [
+                {
+                  title: "学习资源",
+                  icon: "fas fa-graduation-cap",
+                  links: [
+                    { text: "教程文档", icon: "fas fa-file-alt" },
+                    { text: "视频课程", icon: "fas fa-video" },
+                    { text: "在线研讨会", icon: "fas fa-chalkboard" },
+                    { text: "认证培训", icon: "fas fa-certificate" }
+                  ]
+                },
+                {
+                  title: "开发资源",
+                  icon: "fas fa-code",
+                  links: [
+                    { text: "API文档", icon: "fas fa-book-open" },
+                    { text: "代码示例", icon: "fas fa-code" },
+                    { text: "UI组件库", icon: "fas fa-puzzle-piece" },
+                    { text: "设计资源", icon: "fas fa-palette" }
+                  ]
+                },
+                {
+                  title: "社区",
+                  icon: "fas fa-users",
+                  links: [
+                    { text: "技术博客", icon: "fas fa-blog" },
+                    { text: "开发者论坛", icon: "fas fa-comments" },
+                    { text: "开源项目", icon: "fas fa-code-branch" },
+                    { text: "活动日历", icon: "fas fa-calendar-alt" }
+                  ]
+                }
+              ],
+              featured: {
+                title: "最新资源",
+                items: [
+                  { text: "2026技术趋势报告", icon: "fas fa-chart-line" },
+                  { text: "Vue 4.0迁移指南", icon: "fas fa-sync-alt" },
+                  { text: "Web3开发手册", icon: "fas fa-cube" }
+                ]
+              }
+            }
+          }
+        ]);
+        
+        return {
+          activeIndex,
+          activateMenu,
+          deactivateMenu,
+          menuItems
+        };
+      }
+    }).mount("#app");
+  </script>
+</body>
+</html>

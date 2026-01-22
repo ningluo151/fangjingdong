@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue 任务管理器</title>
+  <!-- 引入Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- 引入Font Awesome图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    #app {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(90deg, #3498db, #8e44ad);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    .main-content {
+      padding: 30px;
+    }
+    
+    .input-section {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    input {
+      flex: 1;
+      padding: 16px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+    }
+    
+    input:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+      outline: none;
+    }
+    
+    button {
+      padding: 16px 30px;
+      background: #2ecc71;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    button:hover {
+      background: #27ae60;
+      transform: translateY(-2px);
+    }
+    
+    .filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 12px 24px;
+      background: #f1f2f6;
+      color: #2d3436;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    
+    .filter-btn.active {
+      background: #3498db;
+      color: white;
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      background: #f8f9fa;
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      font-size: 1.1rem;
+    }
+    
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .task-item {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      animation: fadeIn 0.5s;
+    }
+    
+    .task-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    .task-item.completed .task-text {
+      text-decoration: line-through;
+      color: #95a5a6;
+    }
+    
+    .task-checkbox {
+      margin-right: 20px;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+    
+    .task-text {
+      flex: 1;
+      font-size: 1.2rem;
+      word-break: break-word;
+    }
+    
+    .task-actions {
+      display: flex;
+      gap: 12px;
+      margin-left: 15px;
+    }
+    
+    .action-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .edit-btn {
+      background: #f1c40f;
+      color: #2c3e50;
+    }
+    
+    .edit-btn:hover {
+      background: #f39c12;
+    }
+    
+    .delete-btn {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #7f8c8d;
+    }
+    
+    .empty-state i {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      color: #bdc3c7;
+    }
+    
+    .empty-state p {
+      font-size: 1.3rem;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @media (max-width: 768px) {
+      .input-section {
+        flex-direction: column;
+      }
+      
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      .stats {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="header">
+      <h1><i class="fas fa-tasks"></i> Vue 任务管理器</h1>
+      <p class="subtitle">使用 Vue 3 开发的现代化任务管理应用</p>
+    </div>
+
+    <div class="main-content">
+      <!-- 任务输入区域 -->
+      <div class="input-section">
+        <input 
+          type="text" 
+          v-model="newTask" 
+          placeholder="输入新任务..." 
+          @keyup.enter="addTask"
+        >
+        <button @click="addTask">
+          <i class="fas fa-plus"></i> 添加任务
+        </button>
+      </div>
+
+      <!-- 任务过滤选项 -->
+      <div class="filters">
+        <button 
+          class="filter-btn" 
+          :class="{ active: filter === 'all' }"
+          @click="filter = 'all'"
+        >
+          全部任务
+        </button>
+        <button 
+          class="filter-btn" 
+          :class="{ active: filter === 'active' }"
+          @click="filter = 'active'"
+        >
+          进行中
+        </button>
+        <button 
+          class="filter-btn" 
+          :class="{ active: filter === 'completed' }"
+          @click="filter = 'completed'"
+        >
+          已完成
+        </button>
+      </div>
+
+      <!-- 任务统计 -->
+      <div class="stats">
+        <div>总任务: {{ totalTasks }}</div>
+        <div>进行中: {{ activeTasks }}</div>
+        <div>已完成: {{ completedTasks }}</div>
+      </div>
+
+      <!-- 任务列表 -->
+      <div class="task-list">
+        <!-- 任务为空时的状态 -->
+        <div v-if="filteredTasks.length === 0" class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p v-if="filter === 'all'">还没有任务，添加你的第一个任务吧！</p>
+          <p v-if="filter === 'active'">没有进行中的任务</p>
+          <p v-if="filter === 'completed'">还没有完成的任务</p>
+        </div>
+
+        <!-- 任务项 -->
+        <div 
+          v-for="(task, index) in filteredTasks" 
+          :key="task.id"
+          class="task-item"
+          :class="{ completed: task.completed }"
+        >
+          <input 
+            type="checkbox" 
+            class="task-checkbox"
+            v-model="task.completed"
+          >
+          <div class="task-text" v-if="!task.editing" @dblclick="editTask(index)">
+            {{ task.text }}
+          </div>
+          <input 
+            v-else
+            type="text" 
+            v-model="task.text" 
+            @keyup.enter="saveEdit(index)"
+            @blur="saveEdit(index)"
+            class="edit-input"
+          >
+          <div class="task-actions">
+            <div 
+              class="action-btn edit-btn"
+              @click="editTask(index)"
+              v-if="!task.editing"
+            >
+              <i class="fas fa-edit"></i>
+            </div>
+            <div 
+              class="action-btn delete-btn"
+              @click="removeTask(index)"
+            >
+              <i class="fas fa-trash"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref, reactive, computed, onMounted } = Vue;
+
+    createApp({
+      setup() {
+        // 任务数据
+        const tasks = ref([]);
+        const newTask = ref('');
+        const filter = ref('all');
+        
+        // 添加新任务
+        const addTask = () => {
+          if (newTask.value.trim() !== '') {
+            tasks.value.push({
+              id: Date.now(),
+              text: newTask.value.trim(),
+              completed: false,
+              editing: false
+            });
+            newTask.value = '';
+            saveTasks();
+          }
+        };
+        
+        // 删除任务
+        const removeTask = (index) => {
+          tasks.value.splice(index, 1);
+          saveTasks();
+        };
+        
+        // 编辑任务
+        const editTask = (index) => {
+          tasks.value.forEach((task, i) => {
+            task.editing = i === index;
+          });
+        };
+        
+        // 保存编辑
+        const saveEdit = (index) => {
+          tasks.value[index].editing = false;
+          saveTasks();
+        };
+        
+        // 任务统计
+        const totalTasks = computed(() => tasks.value.length);
+        const activeTasks = computed(() => tasks.value.filter(task => !task.completed).length);
+        const completedTasks = computed(() => tasks.value.filter(task => task.completed).length);
+        
+        // 过滤任务
+        const filteredTasks = computed(() => {
+          switch (filter.value) {
+            case 'active':
+              return tasks.value.filter(task => !task.completed);
+            case 'completed':
+              return tasks.value.filter(task => task.completed);
+            default:
+              return tasks.value;
+          }
+        });
+        
+        // 保存任务到本地存储
+        const saveTasks = () => {
+          localStorage.setItem('vue-tasks', JSON.stringify(tasks.value));
+        };
+        
+        // 从本地存储加载任务
+        const loadTasks = () => {
+          const savedTasks = localStorage.getItem('vue-tasks');
+          if (savedTasks) {
+            tasks.value = JSON.parse(savedTasks);
+          }
+        };
+        
+        // 组件挂载时加载任务
+        onMounted(() => {
+          loadTasks();
+        });
+        
+        return {
+          tasks,
+          newTask,
+          filter,
+          addTask,
+          removeTask,
+          editTask,
+          saveEdit,
+          totalTasks,
+          activeTasks,
+          completedTasks,
+          filteredTasks
+        };
+      }
+    }).mount('#app');
+  </script>
+
+<p>内容由AI生成</p>
+</body>
+</html>

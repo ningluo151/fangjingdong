@@ -1,0 +1,248 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    text-decoration: none;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+/* 整体最大宽度 */
+.domebox-maxwhidth {
+    max-width: 1400px;
+}
+
+/* 头部横条抢购 */
+.top {
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e30500;
+}
+
+.top>img {
+    flex: 0 1 50%;
+    max-width: 50%;
+}
+
+.top .top_white {
+    width: 140px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    margin: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.top .top_white img {
+    width: 50px;
+    height: 50px;
+    max-width: 55px;
+}
+
+.top .top_white>div {
+    margin: 10%;
+    padding: 1%;
+    display: flex;
+    flex-flow: column;
+}
+
+.top .top_white p {
+    color: red;
+    font-size: 14px;
+}
+
+/* 导航 */
+.nav {
+    clear: both;
+    height: 40px;
+    border-bottom: 1px solid rgb(214, 214, 214);
+    background-color: #f9f9f9;
+}
+
+.navbox {
+    clear: both;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.nav_l {
+    float: left;
+}
+
+.nav_r {
+    float: right;
+}
+
+.btli {
+    float: left;
+    min-width: 50px;
+    line-height: 40px;
+    text-align: center;
+    padding: 0 10px;
+    position: relative;
+}
+
+.navlist a {
+    color: #333;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+/* .navlist .gwc{ width: 20px;} */
+.navlist .gwc {
+    background: url(./img/gwc.png);
+    background-repeat: no-repeat;
+    background-size: 25%;
+    padding-left: 25px;
+    background-position: left center;
+}
+
+.navlist a:hover {
+    color: red;
+}
+
+.droplist {
+    background-color: #f9f9f9;
+    display: none;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.droplist li {
+    border-top: 1px solid rgb(214, 214, 214);
+}
+
+.btli:hover .droplist {
+    display: block;
+}
+
+.a_bolded {
+    font-weight: 700;
+}
+
+.Website_navigation {
+    min-width: 900px;
+    max-height: 320px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    box-shadow: 0px 0px 5px #888888;
+    display: flex;
+    /* 透明度为0 */
+    /* opacity: 0; */
+    /* 不显示依旧占据 */
+    /* visibility: hidden; */
+    transition: all 0.3s ease;
+}
+
+/* li.btli滑过，显示下拉 */
+.btli:hover .Website_navigation{
+    opacity: 1;
+    visibility: visible;
+}
+
+.navigation {
+    /* 不缩小 */
+    flex-shrink: 0;
+    max-height: 320px;
+    float: left;
+    border-right: 1px solid #b9b8b8;
+    padding: 0 20px;
+    text-align: left;
+}
+
+.navigation:last-child {
+    border: 0;
+}
+.navigation ul{
+    margin: 0 auto;
+    max-height: 280px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.navigation ul li{
+    line-height: 24px;
+    margin: 5px 20px 5px 0;
+}
+.navigation ul li a{
+    font-size: 14px;
+    white-space: nowrap;
+    
+}

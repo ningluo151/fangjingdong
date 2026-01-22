@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻标题滚动效果</title>
+    <style>
+        /* 滚动容器样式  */
+        .news_scroller {
+            width: 100%;
+            height: 40px;
+            overflow: hidden;
+            position: relative;
+            background: #f5f5f5;
+            border: 1px solid #eee;
+        }
+        
+        /* 滚动内容容器 */
+        .news_list {
+            position: absolute;
+            white-space: nowrap;
+            display: flex;
+            animation: scroll 20s linear infinite;
+            will-change: transform; /* 启用GPU加速  */
+        }
+        
+        /* 悬停暂停效果  */
+        .news_scroller:hover .news_list {
+            animation-play-state: paused;
+        }
+        
+        /* 滚动动画定义 */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        /* 新闻项样式 */
+        .news_item {
+            padding: 0 25px;
+            line-height: 40px;
+            color: #333;
+        }
+        
+        .news_tag {
+            display: inline-block;
+            padding: 0 5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 3px;
+            margin-right: 10px;
+            font-size: 12px;
+        }
+        
+        /* 右侧渐变遮罩 */
+        .scroller_mask {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 60px;
+            height: 100%;
+            background: linear-gradient(to right, transparent, #f5f5f5);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 滚动容器 -->
+    <div class="news_scroller">
+        <div class="news_list" id="newsContainer"></div>
+        <div class="scroller_mask"></div> <!-- 右侧渐变遮罩 -->
+    </div>
+
+    <script>
+        // 新闻数据 const用于声明常量变量，其值在程序运行期间不可重新赋值
+        const newsData = [
+            { tag: "热点", title: "我国成功发射新一代通信技术试验卫星" },
+            { tag: "财经", title: "央行宣布降准0.5个百分点释放长期资金约1.2万亿元" },
+            { tag: "科技", title: "人工智能大模型在医疗诊断领域取得突破性进展" },
+            { tag: "体育", title: "中国女排3:0横扫日本队晋级世界联赛四强" },
+            { tag: "国际", title: "多国领导人出席全球气候峰会探讨减排目标" }
+        ];
+        
+        // 初始化新闻列表
+        function initNewsScroller() {
+            const container = document.getElementById('newsContainer');
+            
+            // 生成双倍内容实现无缝滚动 let局部变量
+            let contentHTML = '';
+            for (let i = 0; i < 2; i++) { // 双倍内容
+                newsData.forEach(item => {//for循环
+                    contentHTML += `
+                        <div class="news_item">
+                            <span class="news_tag">${item.tag}</span>
+                            ${item.title}
+                        </div>
+                    `;
+                });
+            }
+            container.innerHTML = contentHTML;
+            
+            // 动态调整动画时间
+            adjustAnimationSpeed();
+        }
+        
+        // 根据内容长度调整滚动速度
+        function adjustAnimationSpeed() {
+            const container = document.getElementById('newsContainer');
+            const style = document.createElement('style');
+            
+            // 计算总宽度和所需时间
+            const totalWidth = container.scrollWidth / 2; // 实际内容宽度
+            const duration = Math.max(10, totalWidth / 50); // 动态计算时间（像素/秒）
+            
+            // 动态创建动画
+            style.textContent = `
+                @keyframes scroll {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-${totalWidth}px); }
+                }
+                .news_list {
+                    animation-duration: ${duration}s;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // 添加新新闻项
+        function addNewsItem(tag, title) {
+            newsData.push({ tag, title });
+            initNewsScroller(); // 重新初始化
+        }
+        
+        // 初始化滚动器
+        window.onload = initNewsScroller;
+        
+        // 示例：3秒后添加新新闻
+        setTimeout(() => {
+            addNewsItem("娱乐", "新晋导演作品《时光之尘》获国际电影节三项大奖");
+        }, 3000);
+    </script>
+</body>
+</html>
