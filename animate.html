@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>缓动动画</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .divbox{
+            width: 200px;
+            height: 200px;
+            background: pink;
+            position: relative;
+            left: 0;
+        }
+        .spanbox{
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+            position: relative;
+            left: 0;
+            top: 200px;
+        }
+
+        .sliderbar{
+            position: fixed;
+            right: 0;
+        }
+        .sliderbar span{
+            display: block;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            line-height: 30px;
+            width: 30px;
+            height: 30px;
+        }
+        .sliderbar span.fanzhuan{
+            transform: all 0.2s;
+            transform: rotateY(180deg)
+        }
+        .sliderbar .con{
+            height: 30px;
+            line-height: 30px;
+            padding: 0 10px;
+            background: purple;
+            color: white;
+            position: absolute;
+            left: 0;
+            top: 0;
+            white-space: nowrap;
+            z-index: -1;
+        }
+    </style>
+    <script src="animate.js"></script>
+</head>
+<body>
+    <div class="divbox"></div>
+    <div class="spanbox"></div>
+    <button>点击开始动画</button>
+
+    <div class="sliderbar">
+        <span>←</span>
+        <div class="con">问题反馈</div>
+    </div>
+    <script>
+        var sliderbar = document.querySelector('.sliderbar');
+        var con = document.querySelector('.con');
+        var span = sliderbar.children[0];
+        console.log(con.offsetWidth,span.offsetWidth,span.offsetHeight)
+        // animate(obj,target,callback)
+        span.addEventListener('mouseenter',function(){
+            animate(con,-con.offsetWidth,function(){
+                // span.className = 'fanzhuan';//修改类名
+                // 或者直接修改内容
+                span.innerHTML = '→';
+            })
+        })
+        span.addEventListener('mouseleave',function(){
+            animate(con,con.offsetWidth,function(){
+                // span.className = ' ';
+                span.innerHTML = '←';
+            })
+        })
+        
+    </script>
+</body>
+</html>

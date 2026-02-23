@@ -1,0 +1,145 @@
+/* 整个轮播盒子 */
+.lunbotu-promo {
+    /* max-width: 420px; */
+    width: 530px;
+    height: 160px;
+    position: relative;
+    overflow: hidden;
+}
+
+.lunbotu-promo ul {
+    width: 500%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+.lunbotu-promo ul li {
+    float: left;
+    list-style-type: none;
+    height: 100%;
+}
+
+.lunbotu-promo ul li a {
+    height: 100%;
+}
+
+.lunbotu-promo ul li img {
+    width: 530px;
+    height: 100%;
+}
+
+/* 按钮 */
+.lunbotu-promo .prev,
+.lunbotu-promo .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(000, 000, 000, 0.3);
+    font-size: 20px;
+    text-decoration: none;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    z-index: 10;
+    display: none;
+}
+
+.lunbotu-promo .prev {
+    left: 0;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.lunbotu-promo .next {
+    right: 0;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+/* 圆圈 */
+ol.pormo-nav {
+    background: rgba(255, 255, 255, 0.3);
+    z-index: 999;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-85%);
+    border-radius: 8px;
+}
+
+ol.pormo-nav li {
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    border: 1px solid #333;
+    float: left;
+    margin: 0 2px;
+}
+
+ol.pormo-nav li.current {
+    background: red;
+}
+
+/* 响应式 */
+@media screen and (max-width:1600px) {
+    .lunbotu-promo {
+        width: 512px;
+        height: 160px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .lunbotu-promo ul li img {
+        width: 512px;
+        height: 100%;
+    }
+
+}
+
+@media screen and (max-width:1400px) {
+    .lunbotu-promo {
+        width: 420px;
+        height: 160px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .lunbotu-promo ul li img {
+        width: 420px;
+        height: 100%;
+    }
+
+}
+
+@media screen and (max-width:1280px) {
+    .lunbotu-promo {
+        width: 363px;
+        height: 160px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .lunbotu-promo ul li img {
+        width: 363px;
+        height: 100%;
+    }
+
+}
+
+@media screen and (max-width:1024px) {
+    .lunbotu-promo {
+        width: 265px;
+        height: 160px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .lunbotu-promo ul li img {
+        width: 265px;
+        height: 100%;
+    }
+
+}

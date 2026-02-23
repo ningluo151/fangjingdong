@@ -1,0 +1,150 @@
+@charset "utf-8";
+@media screen and (max-width:1600px) {
+
+    /* 整体最大宽度 */
+    .domebox-maxwhidth {
+        margin: 0 1%;
+    }
+
+}
+
+@media screen and (max-width:1400px) {
+
+    /* 补贴内容图片显示三个 */
+    .butie ul li:nth-last-child(4) {
+        display: none;
+    }
+
+    /* 标题显示左半部分 */
+    .baoyou .butie-top p:last-child {
+        display: none;
+    }
+
+    .paipaiershou ul li img,
+    .zhibo ul li a img,
+    .miaosha ul li a img,
+    .baoyou ul li a img {
+        width: 70%;
+        height: 80px;
+    }
+}
+
+@media screen and (max-width:1280px) {
+
+    /* 只显示图片内容 */
+    .paipaiershou ul li:first-child {
+        display: none;
+    }
+
+    /* 标题显示左半部分 */
+    .miaosha .butie-top p:last-child {
+        display: none;
+    }
+    .butie ul li a p{
+        display: none;
+    }
+    .zhibo ul li a p{
+        display: block;
+    }
+
+    /* 补贴内容图片显示两个 */
+    .butie ul li:nth-last-child(3) {
+        display: none;
+    }
+
+    .paipaiershou ul li img,
+    .zhibo ul li a img,
+    .miaosha ul li a img,
+    .baoyou ul li a img {
+        width: 78%;
+        height: 90px;
+    }
+}
+
+@media screen and (max-width:1024px) {
+
+    /* 标题显示左半部分 */
+    .butie .butie-top p:last-child {
+        display: none;
+    }
+    .butie{
+        width: 50%;
+        flex: 1 1 50%;
+    }
+    .butie ul li a img{
+        width: 50%;
+        height: 66px;
+    }
+    .paipaiershou ul li a img,
+    .zhibo ul li a img,
+    .miaosha ul li a img,
+    .baoyou ul li a img {
+        width: 78%;
+        height: 80px;
+    }
+    /* 秒杀内容图片显示一个 */
+    .miaosha ul li:nth-last-child(2) {
+        display: none;
+    }
+
+    /* 搜索栏 */
+    .search{
+        margin: 2%;
+    }
+    .search .search-text{
+        width: 392px;
+        flex: 1;
+    }
+    .search .ss{
+        display: flex;
+    }
+    .search ul a:nth-last-child(4) {
+        display: none;
+    }
+    /* 头部导航栏 */
+    .navlist a{
+        font-size: 12px;
+    }
+
+    /* 产品 */
+    .productitems .proitem{
+        width: 23%;
+    }
+    .productitems .proitem .proitem-price{
+        font-size: 12px;
+    }
+    .productitems .proitem .proitem-price>span{
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width:854px) {
+    .shuxiangnavleft,.shuxiangnavdengru{
+        width: 200px;
+        flex: 0 0 200px;
+    }
+    .shuxiangnavleft li a{
+        font-size: 12px;
+    }
+    .pinpai>div:nth-child(2) a{
+        margin: 0 1%;
+    }
+    .pinpai>div:nth-child(2) a p{
+        font-size: 10px;
+    }
+
+    .butie{padding: 5px; margin: 0 5px;}
+    .butie-top p:first-child{
+        font-size: 12px;
+    }
+
+    .remennavitems ul li a{
+        font-size: 12px;
+    }
+    .search ul a{
+        font-size: 12px;
+    }
+    .navlist li{
+        padding: 0 5px;
+    }
+}
